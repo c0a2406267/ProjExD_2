@@ -25,7 +25,7 @@ def gameover(screen: pg.Surface)->None:
     """
     black_surface=pg.Surface((WIDTH,HEIGHT))
     pg.draw.rect(black_surface,(0,0,0),pg.Rect(0,0,WIDTH,HEIGHT))
-    black_surface.set_alpha(126)
+    black_surface.set_alpha(126) 
     naki_img = pg.image.load("fig/8.png")
     fonto=pg.font.Font(None,80)
     txt=fonto.render("Game Over",True, (255,255,255))
@@ -115,20 +115,20 @@ def main():
         # if key_lst[pg.K_RIGHT]:
         #     sum_mv[0] += 5
         kk_rct.move_ip(sum_mv)
-        if check_bound(kk_rct) !=(True,True):
-            kk_rct.move_ip(-sum_mv[0],-sum_mv[1])# 画面内に戻す
-        screen.blit(kk_img, kk_rct)
-        bb_rct.move_ip(vx,vy)
-        yoko,tate=check_bound(bb_rct)
-        if not yoko:
-            vx*=-1
-        if not tate:
-            vy*=-1
 
         bb_imgs,bb_accs = init_bb_imgs()
         avx = vx*bb_accs[min(tmr//500, 9)] 
         bb_img = bb_imgs[min(tmr//500, 9)]
 
+        if check_bound(kk_rct) !=(True,True):
+            kk_rct.move_ip(-sum_mv[0],-sum_mv[1])# 画面内に戻す
+        screen.blit(kk_img, kk_rct)
+        bb_rct.move_ip(avx,vy)
+        yoko,tate=check_bound(bb_rct)
+        if not yoko:
+            vx*=-1
+        if not tate:
+            vy*=-1
 
         screen.blit(bb_img,bb_rct)
         pg.display.update()

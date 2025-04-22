@@ -2,6 +2,7 @@ import os
 import sys
 import pygame as pg
 import random
+import time
 
 
 WIDTH, HEIGHT = 1100, 650
@@ -13,6 +14,20 @@ DELTA={
 }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+def gameover(screen: pg.Surface)->None:
+    black_surface=pg.Surface((WIDTH,HEIGHT))
+    pg.draw.rect(black_surface,(0,0,0),pg.Rect(0,0,WIDTH,HEIGHT))
+    black_surface.set_alpha(126)
+    naki_img = pg.image.load("fig/8.png")
+    fonto=pg.font.Font(None,80)
+    txt=fonto.render("Game Over",True, (255,255,255))
+    
+    screen.blit(black_surface,[0,0])
+    screen.blit(txt,[WIDTH*2/5,HEIGHT/2])
+    screen.blit(naki_img,[WIDTH*8/11,HEIGHT/2])
+    screen.blit(naki_img,[WIDTH*3/10,HEIGHT/2])
+    pg.display.update()
+    time.sleep(5)
 
 def check_bound(rct: pg.Rect)-> tuple[bool,bool]:
     """
@@ -46,6 +61,7 @@ def main():
     bb_rct.centery=random.randint(0,HEIGHT)
     bb_img.set_colorkey((0,0,0))
     vx,vy=+5,+5
+    
 
     clock = pg.time.Clock()
     tmr = 0
@@ -57,7 +73,9 @@ def main():
 
         #こうかとんRectと爆弾Rectが重なっていたら
         if kk_rct.colliderect(bb_rct):
+            gameover(screen)
             print("Game Over")
+            
             return 
 
         key_lst = pg.key.get_pressed()

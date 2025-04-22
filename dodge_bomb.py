@@ -12,9 +12,17 @@ DELTA={
     pg.K_LEFT:(-5,0),
     pg.K_RIGHT:(+5,0),
 }
+
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+
+
 def gameover(screen: pg.Surface)->None:
+    """
+    ゲームオーバー時に,半透明の黒い画面上に「Game Over」と表示し,
+    泣いているこうかとん画像を貼り付ける関数
+    """
     black_surface=pg.Surface((WIDTH,HEIGHT))
     pg.draw.rect(black_surface,(0,0,0),pg.Rect(0,0,WIDTH,HEIGHT))
     black_surface.set_alpha(126)
@@ -28,6 +36,21 @@ def gameover(screen: pg.Surface)->None:
     screen.blit(naki_img,[WIDTH*3/10,HEIGHT/2])
     pg.display.update()
     time.sleep(5)
+
+def init_bb_imgs()->tuple[list[pg.Surface],list[int]]:
+    """
+    サイズの異なる爆弾Surfaceを要素としたリストと
+    加速度リストを返す
+    """
+    bb_accs=[a for a in range(1,11)]
+    bb_imgs=[]
+    for r in range(1,11):
+        
+        bb_img=pg.Surface((20*r,20*r))
+        pg.draw.circle(bb_img,(255,0,0),(10*r,10*r),10*r)
+        bb_img.set_colorkey((0,0,0))
+        bb_imgs.append(bb_img)
+    return bb_imgs,bb_accs
 
 def check_bound(rct: pg.Rect)-> tuple[bool,bool]:
     """
@@ -102,6 +125,11 @@ def main():
             vx*=-1
         if not tate:
             vy*=-1
+
+        bb_imgs,bb_accs = init_bb_imgs()
+        avx = vx*bb_accs[min(tmr//500, 9)] 
+        bb_img = bb_imgs[min(tmr//500, 9)]
+
 
         screen.blit(bb_img,bb_rct)
         pg.display.update()
